@@ -26,7 +26,8 @@
     "build:umd": "cross-env BABEL_ENV=commonjs NODE_ENV=development webpack",
     "generate-parser": "cd src/grammar-parser && jison grammar-parser.jison",
     "release": "generate-release",
-    "postbuild": "node ./scripts/prepare-package"
+    "postbuild": "node ./scripts/prepare-package",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",

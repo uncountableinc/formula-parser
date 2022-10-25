@@ -15,6 +15,8 @@ export default function func(symbol) {
     if (symbolParts.length === 1) {
       if (formulajs[symbolParts[0]]) {
         foundFormula = true;
+        if (symbol === 'LOG' && params.length === 1)
+          params = [...params, Math.E]
         result = formulajs[symbolParts[0]](...params);
       }
     } else {
