@@ -1,6 +1,6 @@
 {
   "name": "hot-formula-parser",
-  "version": "4.2.0-unc4",
+  "version": "4.3.0-unc5",
   "description": "Formula parser",
   "main": "./dist/index",
   "module": "./dist/index.mjs",
@@ -19,12 +19,12 @@
     "check": "npm run lint && npm run test",
     "test": "cross-env BABEL_ENV=commonjs jest",
     "coverage": "cross-env BABEL_ENV=commonjs jest --coverage",
-    "build": "npm run build:commonjs && npm run build:es",
+    "build": "npm run build:es",
     "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir dist",
     "build:es": "cross-env BABEL_ENV=es babel src --out-file-extension .mjs --out-dir dist",
     "build:umd:min": "cross-env BABEL_ENV=commonjs NODE_ENV=production webpack",
     "build:umd": "cross-env BABEL_ENV=commonjs NODE_ENV=development webpack",
-    "generate-parser": "cd src/grammar-parser && jison grammar-parser.jison",
+    "generate-parser": "cd src/grammar-parser && jison-es -m es grammar-parser.jison",
     "release": "generate-release",
     "prepare": "npm run build"
   },
@@ -59,7 +59,7 @@
     "generate-release": "^1.1.1",
     "jest": "^26.6.3",
     "jest-cli": "^26.6.3",
-    "jison": "^0.4.17",
+    "jison-es": "^0.4.18",
     "rimraf": "^3.0.2",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.2.0"
