@@ -114,7 +114,7 @@ expression
   | expression '^' expression {
       $$ = yy.evaluateByOperator('^', [$1, $3]);
     }
-  | '-' expression {
+  | '-' expression %prec UMINUS {
       var n1 = yy.invertNumber($2);
 
       $$ = n1;

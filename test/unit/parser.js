@@ -110,6 +110,18 @@ describe('Parser', () => {
     it('should parse decimal values beginning with a decimal point', () => {
       expect(parser.parse('.35')).toMatchObject({error: null, result: 0.35})
     })
+    
+    it('should respect UMINUS precedence', () => {
+      expect(parser.parse('-3 - 4')).toMatchObject({error: null, result: -7})
+    })
+
+    it('should respect UMINUS precedence following a minus', () => {
+      expect(parser.parse('-3 - -4')).toMatchObject({error: null, result: 1})
+    })
+
+    it('should respect UMINUS precedence in exponentation', () => {
+      expect(parser.parse('10^-3 * 2')).toMatchObject({error: null, result: 0.002})
+    })
   });
 
   describe('.setVariable()/.getVariable()', () => {
