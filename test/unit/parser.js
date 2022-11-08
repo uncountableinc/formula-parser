@@ -106,6 +106,10 @@ describe('Parser', () => {
 
       expect(parser.parse('foo')).toMatchObject({error: null, result: '#ERROR!'});
     });
+
+    it('should parse decimal values beginning with a decimal point', () => {
+      expect(parser.parse('.35')).toMatchObject({error: null, result: 0.35})
+    })
   });
 
   describe('.setVariable()/.getVariable()', () => {
