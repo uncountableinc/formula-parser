@@ -216,6 +216,9 @@ number
   | NUMBER DECIMAL NUMBER {
       $$ = ($1 + '.' + $3) * 1;
     }
+  | DECIMAL NUMBER {
+      $$ = (0 + '.' + $2) * 1;
+    }
   | number '%' {
       $$ = $1 * 0.01;
     }
