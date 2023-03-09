@@ -1,6 +1,6 @@
 {
   "name": "hot-formula-parser",
-  "version": "4.3.0-unc5",
+  "version": "4.3.0-unc6",
   "description": "Formula parser",
   "main": "./dist/index",
   "module": "./dist/index.mjs",
@@ -51,7 +51,7 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.10",
     "babel-loader": "^8.2.2",
-    "cross-env": "^5.2.0",
+    "cross-env": "^5.2.1",
     "eslint": "^4.2.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.14.0",
