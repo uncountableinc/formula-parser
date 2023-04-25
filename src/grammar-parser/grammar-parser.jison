@@ -3,6 +3,7 @@
 %lex
 %%
 \s+                                                                                             {/* skip whitespace */}
+[e]                                                                                             {return 'e';}
 '"'("\\"["]|[^"])*'"'                                                                           {return 'STRING';}
 "'"('\\'[']|[^'])*"'"                                                                           {return 'STRING';}
 [A-Za-z]{1,}[A-Za-z_0-9\.]+(?=[(])                                                              {return 'FUNCTION';}
@@ -221,6 +222,9 @@ number
     }
   | number '%' {
       $$ = $1 * 0.01;
+    }
+  | NUMBER 'e' NUMBER {
+      $$ = yy.evaluateByOperator('*', [$1, yy.evaluateByOperator('^', [10, $3])])
     }
 ;
 
