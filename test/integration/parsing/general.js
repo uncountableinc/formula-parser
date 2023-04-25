@@ -66,10 +66,10 @@ describe('.parse() general', () => {
   });
 
   it('should parse with decimal tokens 1', () => {
-    expect(parser.parse('0.2e2)')).toMatchObject({error: null, result: 20});
+    expect(parser.parse('0.2e2')).toMatchObject({error: null, result: 20});
   });
 
   it('should parse with decimal tokens 1', () => {
-    expect(parser.parse('0.2e0.2)').error).toBe(null);
+    expect(parser.parse('0.2e0.2').error).toBe(null);
   });
 });

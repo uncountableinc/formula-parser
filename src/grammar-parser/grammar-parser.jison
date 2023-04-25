@@ -210,20 +210,26 @@ variableSequence
     }
 ;
 
-number
+decimal_number
   : NUMBER {
       $$ = $1;
     }
   | NUMBER DECIMAL NUMBER {
-      $$ = ($1 + '.' + $3) * 1;
+      $$ = ($1 + '.' + $3);
     }
   | DECIMAL NUMBER {
-      $$ = (0 + '.' + $2) * 1;
+      $$ = (0 + '.' + $2);
+    }
+;
+
+number
+  : decimal_number {
+      $$ = $1 * 1;
     }
   | number '%' {
       $$ = $1 * 0.01;
     }
-  | NUMBER 'e' NUMBER {
+  | decimal_number 'e' decimal_number {
       $$ = yy.evaluateByOperator('*', [$1, yy.evaluateByOperator('^', [10, $3])])
     }
 ;
