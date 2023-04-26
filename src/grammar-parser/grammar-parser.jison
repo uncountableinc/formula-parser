@@ -3,6 +3,7 @@
 %lex
 %%
 \s+                                                                                             {/* skip whitespace */}
+[e]                                                                                             {return 'e';}
 '"'("\\"["]|[^"])*'"'                                                                           {return 'STRING';}
 "'"('\\'[']|[^'])*"'"                                                                           {return 'STRING';}
 [A-Za-z]{1,}[A-Za-z_0-9\.]+(?=[(])                                                              {return 'FUNCTION';}
@@ -209,18 +210,27 @@ variableSequence
     }
 ;
 
-number
+decimal_number
   : NUMBER {
       $$ = $1;
     }
   | NUMBER DECIMAL NUMBER {
-      $$ = ($1 + '.' + $3) * 1;
+      $$ = ($1 + '.' + $3);
     }
   | DECIMAL NUMBER {
-      $$ = (0 + '.' + $2) * 1;
+      $$ = (0 + '.' + $2);
+    }
+;
+
+number
+  : decimal_number {
+      $$ = $1 * 1;
     }
   | number '%' {
       $$ = $1 * 0.01;
+    }
+  | decimal_number 'e' decimal_number {
+      $$ = yy.evaluateByOperator('*', [$1, yy.evaluateByOperator('^', [10, $3])])
     }
 ;
 

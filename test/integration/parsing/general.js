@@ -40,4 +40,36 @@ describe('.parse() general', () => {
   it('should not parse array type data', () => {
     expect(parser.parse(() => {})).toMatchObject({error: '#ERROR!', result: null});
   });
+
+  it('should parse scientific notation with whitespace', () => {
+    expect(parser.parse('1 e 2')).toMatchObject({error: null, result: 100});
+  });
+
+  it('should parse scientific notation without whitespace', () => {
+    expect(parser.parse('1e2')).toMatchObject({error: null, result: 100});
+  });
+
+  it('should parse scientific notation with addition', () => {
+    expect(parser.parse('2*1e2')).toMatchObject({error: null, result: 200});
+  });
+
+  it('should parse scientific notation within complex formula respecting order of operations', () => {
+    expect(parser.parse('2*1e2^3')).toMatchObject({error: null, result: 2000000});
+  });
+
+  it('should parse scientific notation within complex formula respecting order of operations 2', () => {
+    expect(parser.parse('(2*1e2)^3')).toMatchObject({error: null, result: 8000000});
+  });
+
+  it('should not parse with non numeric tokens', () => {
+    expect(parser.parse('(2)e(4)')).toMatchObject({error: "#ERROR!", result: null});
+  });
+
+  it('should parse with decimal tokens 1', () => {
+    expect(parser.parse('0.2e2')).toMatchObject({error: null, result: 20});
+  });
+
+  it('should parse with decimal tokens 1', () => {
+    expect(parser.parse('0.2e0.2').error).toBe(null);
+  });
 });
