@@ -867,8 +867,4 @@ describe('.parse() statistical formulas', () => {
     expect(parser.parse('WEIBULLDIST(1, 2, 3, TRUE)')).toBeMatchCloseTo({error: null, result: 0.10516068318563021});
     expect(parser.parse('WEIBULL.DIST(1, 2, 3, TRUE)')).toBeMatchCloseTo({error: null, result: 0.10516068318563021});
   });
-
-  it('MYTEST', () => {
-    expect(parser.parse('1.3')).toMatchObject({error: null, result: 1.3})
-  });
 });
