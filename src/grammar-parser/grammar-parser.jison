@@ -5,8 +5,6 @@
 \s+                                                                                             {/* skip whitespace */}
 [e]                                                                                             {return 'e';}
 "%"                                                                                             {return '%';}
-"-"                                                                                             {return '-';}
-"+"                                                                                             {return '+';}
 '"'("\\"["]|[^"])*'"'                                                                           {return 'STRING';}
 "'"('\\'[']|[^'])*"'"                                                                           {return 'STRING';}
 [A-Za-z]{1,}[A-Za-z_0-9\.]+(?=[(])                                                              {return 'FUNCTION';}
@@ -18,21 +16,22 @@
 [A-Za-z\.]+(?=[(])                                                                              {return 'FUNCTION';}
 [A-Za-z]{1,}[A-Za-z_0-9]+                                                                       {return 'VARIABLE';}
 [A-Za-z_]+                                                                                      {return 'VARIABLE';}
-([+-]?[0-9]+\.[0-9]*|[+-]?[0-9]*\.[0-9]+|[+-]?[0-9]+)                                           {return 'NUMBER';}
 '['(.*)?']'                                                                                     {return 'ARRAY';}
 "&"                                                                                             {return '&';}
 " "                                                                                             {return ' ';}
-[.]                                                                                             {return 'DECIMAL';}
 ":"                                                                                             {return ':';}
 ";"                                                                                             {return ';';}
 ","                                                                                             {return ',';}
 "*"                                                                                             {return '*';}
 "/"                                                                                             {return '/';}
+"-"                                                                                             {return '-';}
+"+"                                                                                             {return '+';}
 "^"                                                                                             {return '^';}
 "("                                                                                             {return '(';}
 ")"                                                                                             {return ')';}
 ">"                                                                                             {return '>';}
 "<"                                                                                             {return '<';}
+([+-]?[0-9]+\.[0-9]*|[+-]?[0-9]*\.[0-9]+|[+-]?[0-9]+)                                           {return 'NUMBER';}
 "NOT"                                                                                           {return 'NOT';}
 '"'                                                                                             {return '"';}
 "'"                                                                                             {return "'";}

@@ -92,4 +92,8 @@ describe('.parse() general', () => {
   it('should parse percentage signs', () => {
     expect(parser.parse('2%')).toMatchObject({error: null, result: 0.02})
   });
+
+  it('should respect pemdas', () => {
+    expect(parser.parse('2+2*8/4')).toMatchObject({error: null, result: 6})
+  });
 });
