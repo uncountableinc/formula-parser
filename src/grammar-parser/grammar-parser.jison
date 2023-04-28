@@ -4,6 +4,7 @@
 %%
 \s+                                                                                             {/* skip whitespace */}
 [e]                                                                                             {return 'e';}
+"%"                                                                                             {return '%';}
 '"'("\\"["]|[^"])*'"'                                                                           {return 'STRING';}
 "'"('\\'[']|[^'])*"'"                                                                           {return 'STRING';}
 [A-Za-z]{1,}[A-Za-z_0-9\.]+(?=[(])                                                              {return 'FUNCTION';}
@@ -15,11 +16,9 @@
 [A-Za-z\.]+(?=[(])                                                                              {return 'FUNCTION';}
 [A-Za-z]{1,}[A-Za-z_0-9]+                                                                       {return 'VARIABLE';}
 [A-Za-z_]+                                                                                      {return 'VARIABLE';}
-[0-9]+                                                                                          {return 'NUMBER';}
 '['(.*)?']'                                                                                     {return 'ARRAY';}
 "&"                                                                                             {return '&';}
 " "                                                                                             {return ' ';}
-[.]                                                                                             {return 'DECIMAL';}
 ":"                                                                                             {return ':';}
 ";"                                                                                             {return ';';}
 ","                                                                                             {return ',';}
@@ -32,6 +31,7 @@
 ")"                                                                                             {return ')';}
 ">"                                                                                             {return '>';}
 "<"                                                                                             {return '<';}
+([+-]?[0-9]+\.[0-9]*|[+-]?[0-9]*\.[0-9]+|[+-]?[0-9]+)                                           {return 'NUMBER';}
 "NOT"                                                                                           {return 'NOT';}
 '"'                                                                                             {return '"';}
 "'"                                                                                             {return "'";}
@@ -67,9 +67,12 @@ expression
   : variableSequence {
       $$ = yy.callVariable($1[0]);
     }
-  | number {
+  | NUMBER {
       $$ = yy.toNumber($1);
     }
+  | NUMBER '%' {
+      $$ = $1 * 0.01;
+  }
   | STRING {
       $$ = yy.trimEdges($1);
     }
@@ -135,6 +138,12 @@ expression
     }
   | FUNCTION '(' ')' {
       $$ = yy.callFunction($1);
+    }
+  | NUMBER 'e' '-' NUMBER {
+      $$ = yy.evaluateByOperator('*', [$1, yy.evaluateByOperator('^', [10, yy.invertNumber($4)])]);
+  }
+  | NUMBER 'e' NUMBER {
+      $$ = yy.evaluateByOperator('*', [$1, yy.evaluateByOperator('^', [10, $3])]);
     }
   | FUNCTION '(' expseq ')' {
       $$ = yy.callFunction($1, $3);
@@ -207,30 +216,6 @@ variableSequence
   | variableSequence DECIMAL VARIABLE {
       $$ = (Array.isArray($1) ? $1 : [$1]);
       $$.push($3);
-    }
-;
-
-decimal_number
-  : NUMBER {
-      $$ = $1;
-    }
-  | NUMBER DECIMAL NUMBER {
-      $$ = ($1 + '.' + $3);
-    }
-  | DECIMAL NUMBER {
-      $$ = (0 + '.' + $2);
-    }
-;
-
-number
-  : decimal_number {
-      $$ = $1 * 1;
-    }
-  | number '%' {
-      $$ = $1 * 0.01;
-    }
-  | decimal_number 'e' decimal_number {
-      $$ = yy.evaluateByOperator('*', [$1, yy.evaluateByOperator('^', [10, $3])])
     }
 ;
 
