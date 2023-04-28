@@ -72,4 +72,24 @@ describe('.parse() general', () => {
   it('should parse with decimal tokens 1', () => {
     expect(parser.parse('0.2e0.2').error).toBe(null);
   });
+
+  it('should parse with negative exponents', () => {
+    expect(parser.parse('2e-1')).toMatchObject({error: null, result: 0.2})
+  });
+
+  it('should parse with negative base', () => {
+    expect(parser.parse('-2e1')).toMatchObject({error: null, result: -20})
+  });
+
+  it('should parse with negative base and exponent', () => {
+    expect(parser.parse('-2e-1')).toMatchObject({error: null, result: -0.2})
+  });
+
+  it('should parse with negative decimal', () => {
+    expect(parser.parse('-2e-.1').error).toBe(null)
+  });
+
+  it('should parse percentage signs', () => {
+    expect(parser.parse('2%')).toMatchObject({error: null, result: 0.02})
+  });
 });
