@@ -96,4 +96,14 @@ describe('.parse() general', () => {
   it('should respect pemdas', () => {
     expect(parser.parse('2+2*8/4')).toMatchObject({error: null, result: 6})
   });
+
+  it('should parse exp 1', () => {
+    expect(parser.parse('exp(1)')).toMatchObject({error: null, result: 2.718281828459045})
+  })
+
+  it('should parse exp 2', () => {
+    parser.setVariable('alnxb', 0.5)
+    parser.setVariable('Compr', 2)
+    expect(parser.parse('exp((0.85- alnxb)/ Compr )')).toMatchObject({error: null, result: 1.191246216612358})
+  });
 });
