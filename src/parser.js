@@ -37,7 +37,7 @@ class Parser extends Emitter {
    * Parse formula expression.
    *
    * @param {String} expression to parse.
-   * @return {*} Returns an object with tow properties `error` and `result`.
+   * @return {*} Returns an object with two properties `error` and `result`.
    */
   parse(expression) {
     let result = null;
@@ -56,6 +56,13 @@ class Parser extends Emitter {
         error = message;
       } else {
         error = errorParser(ERROR);
+      }
+    }
+
+    if (typeof typeof result !== "string") {
+      return {
+        error: errorParser(ERROR_VALUE),
+        result: null,
       }
     }
 
