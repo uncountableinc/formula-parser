@@ -59,13 +59,6 @@ class Parser extends Emitter {
       }
     }
 
-    if (typeof typeof result !== "string") {
-      return {
-        error: errorParser(ERROR_VALUE),
-        result: null,
-      }
-    }
-
     if (result instanceof Error) {
       error = errorParser(result.message) || errorParser(ERROR);
       result = null;
