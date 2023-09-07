@@ -1,6 +1,6 @@
 {
   "name": "hot-formula-parser",
-  "version": "4.3.2-unc9",
+  "version": "4.3.2-unc10",
   "description": "Formula parser",
   "main": "./dist/index",
   "module": "./dist/index.mjs",
