@@ -30,7 +30,7 @@ describe('.parse() math', () => {
     expect(parser.parse('2 / 1')).toMatchObject({error: null, result: 2});
     expect(parser.parse('64 / 2 / 4')).toMatchObject({error: null, result: 8});
     expect(parser.parse('2 / 0')).toMatchObject({error: null, result: Infinity});
-    expect(parser.parse('"foo" / 4.333')).toMatchObject({error: null, result: NaN});
+    expect(parser.parse('"foo" / 4.333')).toMatchObject({error: '#VALUE!', result: null});
     expect(parser.parse('0 / 0')).toMatchObject({error: null, result: NaN});
   });
 
