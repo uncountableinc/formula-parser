@@ -37,7 +37,7 @@ class Parser extends Emitter {
    * Parse formula expression.
    *
    * @param {String} expression to parse.
-   * @return {*} Returns an object with tow properties `error` and `result`.
+   * @return {*} Returns an object with two properties `error` and `result`.
    */
   parse(expression) {
     let result = null;

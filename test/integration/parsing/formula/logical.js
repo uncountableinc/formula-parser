@@ -31,6 +31,7 @@ describe('.parse() logical formulas', () => {
     expect(parser.parse('IF()')).toMatchObject({error: null, result: true});
     expect(parser.parse('IF(TRUE, 1, 2)')).toMatchObject({error: null, result: 1});
     expect(parser.parse('IF(FALSE, 1, 2)')).toMatchObject({error: null, result: 2});
+    expect(parser.parse('IF(TRUE, 0, 0/0)')).toMatchObject({error: null, result: 0});
   });
 
   it('NOT', () => {
