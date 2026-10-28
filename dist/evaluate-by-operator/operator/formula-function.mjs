@@ -13,6 +13,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 import formulajs from '@handsontable/formulajs';
 import SUPPORTED_FORMULAS from "./../../supported-formulas.mjs";
 import { ERROR_NAME } from "./../../error.mjs";
+import { sumIf, sumIfs } from "./conditional-sums.mjs";
+var formulas = Object.assign({}, formulajs, {
+  SUMIF: sumIf,
+  SUMIFS: sumIfs
+});
 export var SYMBOL = SUPPORTED_FORMULAS;
 export default function func(symbol) {
   return function __formulaFunction() {
@@ -26,15 +31,15 @@ export default function func(symbol) {
     var result;
 
     if (symbolParts.length === 1) {
-      if (formulajs[symbolParts[0]]) {
+      if (formulas[symbolParts[0]]) {
         foundFormula = true;
         if (symbol === 'LOG' && params.length === 1) params = [].concat(_toConsumableArray(params), [Math.E]);
-        result = formulajs[symbolParts[0]].apply(formulajs, _toConsumableArray(params));
+        result = formulas[symbolParts[0]].apply(formulas, _toConsumableArray(params));
       }
     } else {
       var length = symbolParts.length;
       var index = 0;
-      var nestedFormula = formulajs;
+      var nestedFormula = formulas;
 
       while (index < length) {
         nestedFormula = nestedFormula[symbolParts[index]];
