@@ -79,7 +79,14 @@ export function sumIf(...args) {
   return sumMatchingRanges(sumRange, [{range, criterion}]);
 }
 
+function isLegacyCriteriaList(args) {
+  return !Array.isArray(args[1]);
+}
+
 export function sumIfs(...args) {
+  if (isLegacyCriteriaList(args)) {
+    return formulajs.SUMIFS(...args);
+  }
   if (args.length < 3 || args.length % 2 !== 1) {
     return Error(ERROR_NOT_AVAILABLE);
   }

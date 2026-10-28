@@ -616,6 +616,14 @@ describe('.parse() math-trig formulas', () => {
       expect(parser.parse('SUMIFS(B1:B3, A1:A3, "filler", C1:C3, "group a")')).toMatchObject({error: null, result: 3});
     });
 
+    it('SUMIFS with the legacy criteria list form', () => {
+      expect(parser.parse('SUMIFS(B1:B3, ">3")')).toMatchObject({error: null, result: 12});
+      expect(parser.parse('SUMIFS(B1:B3, ">2", "<7")')).toMatchObject({error: null, result: 8});
+      expect(parser.parse('SUMIFS(B1:B3, ">2", "<7", "<>5")')).toMatchObject({error: null, result: 3});
+      expect(parser.parse('SUMIFS(B1:B3, ">2", "<7") + 37')).toMatchObject({error: null, result: 45});
+      expect(parser.parse('SUMIFS(A1:A3, ">2")')).toMatchObject({error: '#VALUE!', result: null});
+    });
+
     it('SUMIFS with invalid arguments', () => {
       expect(parser.parse('SUMIFS(B1:B3, A1:A3)')).toMatchObject({error: '#N/A', result: null});
       expect(parser.parse('SUMIFS(B1:B3, A1:A2, "Filler")')).toMatchObject({error: '#VALUE!', result: null});
