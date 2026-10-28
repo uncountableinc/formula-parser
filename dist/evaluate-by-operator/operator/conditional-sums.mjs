@@ -120,18 +120,9 @@ export function sumIf() {
     criterion: criterion
   }]);
 }
-
-function isLegacyCriteriaList(args) {
-  return !Array.isArray(args[1]);
-}
-
 export function sumIfs() {
   for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
     args[_key2] = arguments[_key2];
-  }
-
-  if (isLegacyCriteriaList(args)) {
-    return formulajs.SUMIFS.apply(formulajs, args);
   }
 
   if (args.length < 3 || args.length % 2 !== 1) {
