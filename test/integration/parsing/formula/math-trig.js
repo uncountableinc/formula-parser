@@ -578,20 +578,64 @@ describe('.parse() math-trig formulas', () => {
     expect(parser.parse('SUM(64, 3.3, 0.1)')).toBeMatchCloseTo({error: null, result: 67.4});
   });
 
-  it('SUMIF', () => {
-    parser.on('callRangeValue', (a, b, done) => {
-      done([[1, 2, 3]]);
+  describe('conditional sums', () => {
+    const cells = [
+      ['Filler', 3, 'Group A'],
+      ['Resin', 5, 'Group A'],
+      ['Filler', 7, 'Group B'],
+    ];
+
+    beforeEach(() => {
+      parser.on('callRangeValue', (start, end, done) => {
+        done(cells.slice(start.row.index, end.row.index + 1).map((row) => row.slice(start.column.index, end.column.index + 1)));
+      });
     });
 
-    expect(parser.parse('SUMIF(A1:C1, ">2")')).toMatchObject({error: null, result: 3});
-  });
-
-  it('SUMIFS', () => {
-    parser.on('callRangeValue', (a, b, done) => {
-      done([[1, 2, 3]]);
+    it('SUMIF', () => {
+      expect(parser.parse('SUMIF(B1:B3, ">3")')).toMatchObject({error: null, result: 12});
+      expect(parser.parse('SUMIF(A1:C1, "*")')).toMatchObject({error: null, result: 3});
+      expect(parser.parse('SUMIF(A1:A3, "Filler", B1:B3)')).toMatchObject({error: null, result: 10});
+      expect(parser.parse('SUMIF(A1:A3, "Filler", B1:B3) + 37')).toMatchObject({error: null, result: 47});
+      expect(parser.parse('SUMIF(A1:A3, "Missing", B1:B3)')).toMatchObject({error: null, result: 0});
+      expect(parser.parse('SUMIF(A1:A3, "fIlLeR", B1:B3)')).toMatchObject({error: null, result: 10});
+      expect(parser.parse('SUMIF(A1:A3, "<>fIlLeR", B1:B3)')).toMatchObject({error: null, result: 5});
     });
 
-    expect(parser.parse('SUMIFS(A1:C1, ">1", "<3")')).toMatchObject({error: null, result: 2});
+    it('SUMIF with invalid arguments', () => {
+      expect(parser.parse('SUMIF(B1:B3)')).toMatchObject({error: '#N/A', result: null});
+      expect(parser.parse('SUMIF(A1:A3, "Filler", B1:B3, C1:C3)')).toMatchObject({error: '#N/A', result: null});
+      expect(parser.parse('SUMIF(A1:A3, "Filler", B1:B2)')).toMatchObject({error: '#VALUE!', result: null});
+    });
+
+    it('SUMIFS', () => {
+      expect(parser.parse('SUMIFS(B1:B3, A1:A3, "Filler")')).toMatchObject({error: null, result: 10});
+      expect(parser.parse('SUMIFS(B1:B3, A1:A3, "Filler", C1:C3, "Group A")')).toMatchObject({error: null, result: 3});
+      expect(parser.parse('SUMIFS(B1:B3, A1:A3, "Filler", C1:C3, "Group A") + 37')).toMatchObject({error: null, result: 40});
+      expect(parser.parse('SUMIFS(B1:B3, A1:A3, "Missing")')).toMatchObject({error: null, result: 0});
+      expect(parser.parse('SUMIFS(B1:B3, B1:B3, ">3", B1:B3, "<7")')).toMatchObject({error: null, result: 5});
+      expect(parser.parse('SUMIFS(B1:B3, A1:A3, "filler", C1:C3, "group a")')).toMatchObject({error: null, result: 3});
+    });
+
+    it('SUMIFS with the legacy criteria list form', () => {
+      expect(parser.parse('SUMIFS(B1:B3, ">3")')).toMatchObject({error: null, result: 12});
+      expect(parser.parse('SUMIFS(B1:B3, ">2", "<7")')).toMatchObject({error: null, result: 8});
+      expect(parser.parse('SUMIFS(B1:B3, ">2", "<7", "<>5")')).toMatchObject({error: null, result: 3});
+      expect(parser.parse('SUMIFS(B1:B3, ">2", "<7") + 37')).toMatchObject({error: null, result: 45});
+      expect(parser.parse('SUMIFS(A1:A3, ">2")')).toMatchObject({error: '#VALUE!', result: null});
+    });
+
+    it('SUMIFS with invalid arguments', () => {
+      expect(parser.parse('SUMIFS(B1:B3, A1:A3)')).toMatchObject({error: '#N/A', result: null});
+      expect(parser.parse('SUMIFS(B1:B3, A1:A2, "Filler")')).toMatchObject({error: '#VALUE!', result: null});
+      expect(parser.parse('SUMIFS(A1:B1, A1:A2, "Filler")')).toMatchObject({error: '#VALUE!', result: null});
+    });
+
+    it('recovers after incomplete conditional sum syntax', () => {
+      expect(parser.parse('SUMIF(A1:A3, "Filler",')).toMatchObject({error: '#ERROR!', result: null});
+      expect(parser.parse('SUMIF(A1:A3, "Filler", B1:B3) + 37')).toMatchObject({error: null, result: 47});
+      expect(parser.parse('SUMIFS(B1:B3, A1:A3, "Filler",')).toMatchObject({error: '#ERROR!', result: null});
+      expect(parser.parse('SUMIFS(B1:B3, A1:A3, "Filler", C1:C3, "Group A") + 37')).toMatchObject({error: null, result: 40});
+    });
   });
 
   it('SUMPRODUCT', () => {

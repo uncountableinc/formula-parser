@@ -1,6 +1,9 @@
 import formulajs from '@handsontable/formulajs';
 import SUPPORTED_FORMULAS from './../../supported-formulas';
 import {ERROR_NAME} from './../../error';
+import {sumIf, sumIfs} from './conditional-sums';
+
+const formulas = Object.assign({}, formulajs, {SUMIF: sumIf, SUMIFS: sumIfs});
 
 export const SYMBOL = SUPPORTED_FORMULAS;
 
@@ -13,16 +16,16 @@ export default function func(symbol) {
     let result;
 
     if (symbolParts.length === 1) {
-      if (formulajs[symbolParts[0]]) {
+      if (formulas[symbolParts[0]]) {
         foundFormula = true;
         if (symbol === 'LOG' && params.length === 1)
           params = [...params, Math.E]
-        result = formulajs[symbolParts[0]](...params);
+        result = formulas[symbolParts[0]](...params);
       }
     } else {
       const length = symbolParts.length;
       let index = 0;
-      let nestedFormula = formulajs;
+      let nestedFormula = formulas;
 
       while (index < length) {
         nestedFormula = nestedFormula[symbolParts[index]];
